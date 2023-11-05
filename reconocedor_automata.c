@@ -150,5 +150,5 @@ void inicializarVector (int largo, char vector[]) {
 void cargarLexema (int max_lexema, char lexema[], char* input) {
     int largo = strlen(input);
     inicializarVector(max_lexema, lexema);
-    strncpy(lexema, input, largo-1);
+    strncpy(lexema, input, largo);
 }
