@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-//#include "reconocedor.h"
+#include "reconocedor.h"
 
 #define MAX_LEXEMA 15
 
@@ -18,7 +18,7 @@ struct posicion posicionActual = {0,0};
 void inicializarVector (int largo, char vector[]);
 int ignorarEntrada(char entrada);
 void agregarAlLexema(char entrada, int maxLexema, char lexema[]);
-char* obtenerToken(int estado);
+void obtenerToken(int estado, char token[]);
 void imprimirEncabezado();
 void imprimirToken(char token[], char lexema[]);
 void actualizarPosicion(struct posicion* posicionActual, char entrada);
@@ -32,9 +32,12 @@ int main (void) {
     int maxLexema = MAX_LEXEMA;
     char lexema[maxLexema+1];
 
+    // vector = {'0', '1', '2', '3', '4', '\0'}
+
     inicializarVector(maxLexema, lexema);
 
     int entrada, estado;
+    char token[11+1];
 
     imprimirEncabezado();
 
@@ -44,11 +47,13 @@ int main (void) {
 
             inicializarVector(maxLexema, lexema);
 
-            agregarALexema(entrada, maxLexema, lexema);
+            agregarAlLexema(entrada, maxLexema, lexema);
 
             estado = AFD(maxLexema, lexema);
 
-            imprimirToken(obtenerToken(estado), lexema);
+            inicializarVector(11, token);
+            obtenerToken(estado, token);
+            imprimirToken(token, lexema);
         
         } else { actualizarPosicion(&posicionActual, entrada); }
 
@@ -87,12 +92,9 @@ void agregarAlLexema(char entrada, int maxLexema, char lexema[]) {
         if(!ignorarEntrada(entrada)) { lexema[i] = entrada; }
     }
 
-    return lexema;
 }
 
-char* obtenerToken(int estado) {
-    char token[30+1];
-    inicializarVector(30, token);
+void obtenerToken(int estado, char token[]) {
 
     switch(estado) {
         case 1: 
@@ -101,32 +103,26 @@ char* obtenerToken(int estado) {
         case 2:
             strcpy(token, "numero");
             break;
-        default: strcpy(token, "desconocido [Ln ..., Col ...]");
+        default: strcpy(token, "desconocido");
     }
-
-    return token;
 }
-
-/*
-    PALABRA | TOKEN
-    --------|---------
-    (       | operador
-    --------|-------------
-    1       |
-
-    PALABRA | TOKEN
-    (       | operador
-    1       | numero
-
-
-*/
 
 
 void imprimirEncabezado() {
     printf("%-15s | %-30s\n", "PALABRA", "TOKEN");
 }
 
+
 void imprimirToken(char token[], char lexema[]) {
+    char posicion[15+1];
+    int linea;
+    int columna;
+
+    if(strcmp(token, "desconocido")) {
+        inicializarVector(15, posicion);
+        sprintf(posicion, " [Ln %d Col %d ]", posicionActual.linea, posicionActual.columna);
+        strcat(token, posicion);
+    }
     printf("%-15s | %-30s\n", lexema, token);
 }
 

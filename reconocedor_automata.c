@@ -19,49 +19,49 @@ int esOperador(char caracter);
 int tipoDeCaracter(char caracter);
 int fTransicion(int estadoActual, char caracterLeido);
 
-void inicializarVector (int largo, char vector[]);
-void mostrarTransicion(int estadoActual, char caracterLeido);
-void cargarLexema (int max_lexema, char lexema[], char* input);
+// void inicializarVector (int largo, char vector[]);
+// void mostrarTransicion(int estadoActual, char caracterLeido);
+// void cargarLexema (int max_lexema, char lexema[], char* input);
 
 // MAIN PRUEBAS
 
-int main(void) {
+// int main(void) {
 
-    // PRUEBAS AFD
+//     // PRUEBAS AFD
 
-    int max_lexema = 15;
-    char lexema[max_lexema+1];
+//     int max_lexema = 15;
+//     char lexema[max_lexema+1];
 
-    printf("ENTRADA | SALIDA\n"); 
+//     printf("ENTRADA | SALIDA\n"); 
     
-    cargarLexema(max_lexema, lexema, "(");
-    printf("%-7s | %-6d\n", "(", AFD(max_lexema, lexema));
+//     cargarLexema(max_lexema, lexema, "(");
+//     printf("%-7s | %-6d\n", "(", AFD(max_lexema, lexema));
     
-    cargarLexema(max_lexema, lexema, "012");
-    printf("%-7s | %-6d\n", "012", AFD(max_lexema, lexema));
+//     cargarLexema(max_lexema, lexema, "012");
+//     printf("%-7s | %-6d\n", "012", AFD(max_lexema, lexema));
 
-    cargarLexema(max_lexema, lexema, "hola");
-    printf("%-7s | %-6d\n", "hola", AFD(max_lexema, lexema));
+//     cargarLexema(max_lexema, lexema, "hola");
+//     printf("%-7s | %-6d\n", "hola", AFD(max_lexema, lexema));
 
-    cargarLexema(max_lexema, lexema, "1+1");
-    printf("%-7s | %-6d\n", "1+1", AFD(max_lexema, lexema));
+//     cargarLexema(max_lexema, lexema, "1+1");
+//     printf("%-7s | %-6d\n", "1+1", AFD(max_lexema, lexema));
 
 
-    // PRUEBAS FUNCIÓN DE TRANSICIÓN
+//     // PRUEBAS FUNCIÓN DE TRANSICIÓN
 
-    // mostrarTransicion(0, '(');   // 1
-    // mostrarTransicion(1, '2');   // 3 
-    // mostrarTransicion(1, ')');   // 3
+//     // mostrarTransicion(0, '(');   // 1
+//     // mostrarTransicion(1, '2');   // 3 
+//     // mostrarTransicion(1, ')');   // 3
     
-    // mostrarTransicion(0, '2');   // 2
-    // mostrarTransicion(2, ')');   // 3
-    // mostrarTransicion(2, '2');   // 2
+//     // mostrarTransicion(0, '2');   // 2
+//     // mostrarTransicion(2, ')');   // 3
+//     // mostrarTransicion(2, '2');   // 2
 
 
 
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 
@@ -136,19 +136,19 @@ int fTransicion(int estadoActual, char caracterLeido) {
 
 // PARA PROBAR
 
-void mostrarTransicion(int estadoActual, char caracterLeido) {
-    int estadoSiguiente = fTransicion(estadoActual, caracterLeido);
-    printf("%d -> %c -> %d\n", estadoActual, caracterLeido, estadoSiguiente);
-}
+// void mostrarTransicion(int estadoActual, char caracterLeido) {
+//     int estadoSiguiente = fTransicion(estadoActual, caracterLeido);
+//     printf("%d -> %c -> %d\n", estadoActual, caracterLeido, estadoSiguiente);
+// }
 
-void inicializarVector (int largo, char vector[]) {
-    for(int i = 0; i < largo; i++) {
-        vector[i] = ' ';
-    }
-}
+// void inicializarVector (int largo, char vector[]) {
+//     for(int i = 0; i < largo; i++) {
+//         vector[i] = ' ';
+//     }
+// }
 
-void cargarLexema (int max_lexema, char lexema[], char* input) {
-    int largo = strlen(input);
-    inicializarVector(max_lexema, lexema);
-    strncpy(lexema, input, largo);
-}
+// void cargarLexema (int max_lexema, char lexema[], char* input) {
+//     int largo = strlen(input);
+//     inicializarVector(max_lexema, lexema);
+//     strncpy(lexema, input, largo);
+// }
