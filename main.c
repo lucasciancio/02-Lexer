@@ -4,6 +4,7 @@
 #include "reconocedor.h"
 
 #define MAX_LEXEMA 15
+#define MAX_TOKEN 40
 
 
 struct posicion {
@@ -15,15 +16,14 @@ struct posicion posicionActual = {0,0};
 
 // PROTOTIPOS
 
-void inicializarVector (int largo, char vector[]);
+void inicializarVector (int largo, char* vector);
 int ignorarEntrada(char entrada);
-void agregarAlLexema(char entrada, int maxLexema, char lexema[]);
-void obtenerToken(int estado, char token[]);
+void agregarAlLexema(char entrada, int maxLexema, char* lexema);
+char* obtenerToken(int estado, char* token);
 void imprimirEncabezado();
-void imprimirToken(char token[], char lexema[]);
+void imprimirToken(char* token, char* lexema);
 void actualizarPosicion(struct posicion* posicionActual, char entrada);
-void retrocederPosicion(struct posicion* posicionActual, char entrada);
-
+void retrocederPosicion(struct posicion* posicionActual);
 
 // MAIN
 
@@ -32,17 +32,17 @@ int main (void) {
     int maxLexema = MAX_LEXEMA;
     char lexema[maxLexema+1];
 
-    // vector = {'0', '1', '2', '3', '4', '\0'}
-
-    inicializarVector(maxLexema, lexema);
-
+    int maxToken = MAX_TOKEN;
+    char token[maxToken+1];
+    
     int entrada, estado;
-    char token[11+1];
+    
+    entrada = getc(stdin);
 
     imprimirEncabezado();
 
-    while((entrada = getc(stdin)) != EOF) {
-
+    while(entrada != EOF) {
+        
         if(!ignorarEntrada(entrada)) {
 
             inicializarVector(maxLexema, lexema);
@@ -51,11 +51,13 @@ int main (void) {
 
             estado = AFD(maxLexema, lexema);
 
-            inicializarVector(11, token);
-            obtenerToken(estado, token);
-            imprimirToken(token, lexema);
+            inicializarVector(maxToken, token);
+            
+            imprimirToken(obtenerToken(estado, token), lexema);
         
         } else { actualizarPosicion(&posicionActual, entrada); }
+
+        entrada = getc(stdin);
 
     }
 
@@ -70,10 +72,8 @@ int ignorarEntrada(char entrada) {
     return entrada == '\n' || entrada == '\r' || entrada == ' ';
 }
 
-// (1+1) *2\n3/4\n2\n3
 
-
-void agregarAlLexema(char entrada, int maxLexema, char lexema[]) {
+void agregarAlLexema(char entrada, int maxLexema, char* lexema) {
 
     int i = 0;
 
@@ -86,7 +86,7 @@ void agregarAlLexema(char entrada, int maxLexema, char lexema[]) {
         } while ((entrada = getc(stdin) != EOF) && (isdigit(entrada)) && (i < maxLexema));
 
         ungetc(entrada, stdin);
-        retrocederPosicion(&posicionActual, entrada);
+        retrocederPosicion(&posicionActual);
 
     } else {
         if(!ignorarEntrada(entrada)) { lexema[i] = entrada; }
@@ -94,7 +94,7 @@ void agregarAlLexema(char entrada, int maxLexema, char lexema[]) {
 
 }
 
-void obtenerToken(int estado, char token[]) {
+char* obtenerToken(int estado, char* token) {
 
     switch(estado) {
         case 1: 
@@ -103,31 +103,27 @@ void obtenerToken(int estado, char token[]) {
         case 2:
             strcpy(token, "numero");
             break;
-        default: strcpy(token, "desconocido");
+        default:
+            int linea = posicionActual.linea;
+            int col = posicionActual.columna;
+            sprintf(token, "desconocido [Ln %d, Col %d]", linea, col);
     }
+
+    return token;
 }
 
 
 void imprimirEncabezado() {
-    printf("%-15s | %-30s\n", "PALABRA", "TOKEN");
+    printf("\n\n%-15s | %-40s\n", "PALABRA", "TOKEN");
 }
 
 
-void imprimirToken(char token[], char lexema[]) {
-    char posicion[15+1];
-    int linea;
-    int columna;
-
-    if(strcmp(token, "desconocido")) {
-        inicializarVector(15, posicion);
-        sprintf(posicion, " [Ln %d Col %d ]", posicionActual.linea, posicionActual.columna);
-        strcat(token, posicion);
-    }
-    printf("%-15s | %-30s\n", lexema, token);
+void imprimirToken(char* token, char* lexema) {
+    printf("%-15s | %-40s\n", lexema, token);
 }
 
 
-void inicializarVector (int largo, char vector[]) {
+void inicializarVector (int largo, char* vector) {
     for(int i = 0; i < largo; i++) {
         vector[i] = ' ';
     }
@@ -136,11 +132,11 @@ void inicializarVector (int largo, char vector[]) {
 
 void actualizarPosicion(struct posicion* posicionActual, char entrada) {
     if (entrada == '\n') {
-        (*posicionActual).linea++;
+        (*posicionActual).linea ++;
         (*posicionActual).columna = 0;
     } else { (*posicionActual).columna ++; }
 }
 
-void retrocederPosicion(struct posicion* posicionActual, char entrada) {
-    (*posicionActual).columna--;
+void retrocederPosicion(struct posicion* posicionActual) {
+    (*posicionActual).columna --;
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-//#include "reconocedor.h"
+#include "reconocedor.h"
 
 typedef enum {
     DESCONOCIDO = -1,
@@ -14,7 +14,7 @@ const char operadores[7] = {'+', '-', '*', '/', '(', ')'};
 
 // PROTOTIPOS
 
-int AFD(int maxLexema, char lexema[]);
+int AFD(int maxLexema, char* lexema);
 int esOperador(char caracter);
 int tipoDeCaracter(char caracter);
 int fTransicion(int estadoActual, char caracterLeido);
@@ -67,7 +67,8 @@ int fTransicion(int estadoActual, char caracterLeido);
 
 // AUTOMATA
 
-int AFD(int maxLexema, char lexema[]) {
+
+int AFD(int maxLexema, char* lexema) {
 
     int estadoActual = 0;      //  {'(',' ', ' ', ' ', ..., ' '}
     int i = 0;
