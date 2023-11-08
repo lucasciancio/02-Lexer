@@ -12,7 +12,7 @@ struct posicion {
     int columna;
 };
 
-struct posicion posicionActual = {0,0};
+struct posicion posicionActual = {1,0};
 
 // PROTOTIPOS
 
@@ -83,12 +83,13 @@ void agregarAlLexema(char entrada, int maxLexema, char* lexema) {
             actualizarPosicion(&posicionActual, entrada);
             lexema[i] = entrada;
             i++;
-        } while ((entrada = getc(stdin) != EOF) && (isdigit(entrada)) && (i < maxLexema));
+        } while (((entrada = getc(stdin)) != EOF) && (isdigit(entrada)) && (i < maxLexema));
 
         ungetc(entrada, stdin);
         retrocederPosicion(&posicionActual);
 
     } else {
+        actualizarPosicion(&posicionActual, entrada);
         if(!ignorarEntrada(entrada)) { lexema[i] = entrada; }
     }
 
