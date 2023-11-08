@@ -23,7 +23,6 @@ char* obtenerToken(int estado, char* token);
 void imprimirEncabezado();
 void imprimirToken(char* token, char* lexema);
 void actualizarPosicion(struct posicion* posicionActual, char entrada);
-void retrocederPosicion(struct posicion* posicionActual);
 
 // MAIN
 
@@ -86,7 +85,6 @@ void agregarAlLexema(char entrada, int maxLexema, char* lexema) {
         } while (((entrada = getc(stdin)) != EOF) && (isdigit(entrada)) && (i < maxLexema));
 
         ungetc(entrada, stdin);
-        retrocederPosicion(&posicionActual);
 
     } else {
         actualizarPosicion(&posicionActual, entrada);
@@ -136,8 +134,4 @@ void actualizarPosicion(struct posicion* posicionActual, char entrada) {
         (*posicionActual).linea ++;
         (*posicionActual).columna = 0;
     } else { (*posicionActual).columna ++; }
-}
-
-void retrocederPosicion(struct posicion* posicionActual) {
-    (*posicionActual).columna --;
 }
